@@ -9,6 +9,11 @@ export class AppController {
     res.render('login');
   }
 
+  @Get('/about')
+  getAboutPage(@Res() res: Response) {
+    res.render('about');
+  }
+
   @Post('/login')
   async login(
     @Body('email') email: string,
