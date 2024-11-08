@@ -6,14 +6,20 @@
     <title>Page non trouvée</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
+<body class="error-page">
     {{> navbar}}
 
+    <!-- Animation du GIF -->
+    <div class="gif-container">
+        <img src="/images/404.gif" alt="404 Animation" id="moving-gif">
+    </div>
+
     <div class="error-container">
-        <h1>Erreur {{statusCode}}</h1>
-        <p>{{message}}</p>
+        <h1>Erreur 404</h1>
         <p>Oups ! La page que vous cherchez n'existe pas.</p>
         <a href="/" class="home-button">Retour à l'accueil</a>
     </div>
+
+    <script src="/scripts/404-animation.js"></script>
 </body>
 </html>
