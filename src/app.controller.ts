@@ -5,6 +5,11 @@ import { Response } from 'express';
 @Controller()
 export class AppController {
   @Get('/')
+  getHomePage(@Res() res: Response) {
+    res.render('homepage');
+  }
+
+  @Get('/login')
   getLoginPage(@Res() res: Response) {
     res.render('login');
   }
