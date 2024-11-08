@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page non trouvée</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    {{> navbar}}
+
+    <div class="error-container">
+        <h1>Erreur {{statusCode}}</h1>
+        <p>{{message}}</p>
+        <p>Oups ! La page que vous cherchez n'existe pas.</p>
+        <a href="/" class="home-button">Retour à l'accueil</a>
+    </div>
+</body>
+</html>

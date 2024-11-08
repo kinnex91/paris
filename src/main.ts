@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
+import { NotFoundFilter } from './not-found.filter';
 import * as hbs from 'hbs';
 
 async function bootstrap() {
@@ -14,6 +15,9 @@ async function bootstrap() {
 
   // Enregistrer les partials pour Handlebars
   hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
+
+  // Utiliser le filtre global pour les erreurs 404
+  app.useGlobalFilters(new NotFoundFilter());
 
   await app.listen(4000);
   console.log('Frontend démarré sur http://localhost:4000');
