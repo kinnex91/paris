@@ -10,10 +10,16 @@ const API_BASE_URL = 'http://localhost:3007';
 
 
 
-function FormRegister({ isSignup = false, onSubmit }) {
+function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
+
+    var isConnexion = true;
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [serviceId, setServiceId] = useState('');
     const [toastMessage, setToastMessage] = useState('');
+    const [toastDuration, setToastDuration] = useState(3000);
+    
     const [toastType, setToastType] = useState('');
     const [isAnimating, setIsAnimating] = useState(false); // Animation pour la redirection
     const [isFirstLoad, setIsFirstLoad] = useState(true); // Animation de chargement
@@ -26,17 +32,42 @@ function FormRegister({ isSignup = false, onSubmit }) {
         return emailRegex.test(email);
     };
 
+    const isValidPassword = (isConnected, pass) => {
+       
+        //on valide la taille du password seulement pour les inscriptions pas les connexions
+        if(isConnected  )
+            return true;
+
+        return ( !(typeof pass === 'string'))|| (pass.length  > 11);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!isValidEmail(username)) {
+       
+        {isSignup && (isConnexion=false)}
+
+        if (!isValidPassword(true,password)) {
+            setToastType('error');
+            setToastMessage('Une taille minimum de 12 caractères est requis sur votre champs mot de passe.');
+            return;
+        }
+
+
+        if (!isValidPassword(username)) {
             setToastType('error');
             setToastMessage('Veuillez entrer un email valide');
             return;
         }
 
         try {
-            const res = await axios.post(`${API_BASE_URL}/auth/login`, { username, password });
+            var rest = null;
+
+            if(isConnexion)
+                 res = await axios.post(`${API_BASE_URL}/auth/login`, { username, password });
+            else
+                res = await axios.post(`${API_BASE_URL}`+urlPost, { username, password });
+            
             const { jwt, message } = res.data;
 
             // Stocker le token JWT dans le localStorage
@@ -51,10 +82,27 @@ function FormRegister({ isSignup = false, onSubmit }) {
             setTimeout(() => navigate('/recipes'), 2000); // Délai de 2 secondes pour laisser l'animation se dérouler
 
         } catch (error) {
-            console.error('Erreur de connexion:', error);
-            const errorMessage = error.response?.data?.message || 'Erreur lors de la connexion';
-            setToastType('error');
-            setToastMessage(errorMessage);
+           
+ 
+
+            const  errorMessage = error.response?.data?.message || 'Erreur lors de la connexion.'
+            
+            {isSignup && (setToastDuration(17000))}
+
+            if(isConnexion)
+            {
+                console.error('Erreur de connexion:', error);
+                setToastType('error');
+                setToastMessage(errorMessage);
+    
+            }else{
+                
+                setToastDuration(20000);
+                setToastType('info');
+                setToastMessage('Si votre code de service est valide, vous recevrez un mail de noreply@ pour valider votre inscirption. Vérifiez vos spams.');
+            }
+       
+
         }
     };
 
@@ -124,8 +172,8 @@ function FormRegister({ isSignup = false, onSubmit }) {
                         variant="outlined"
                         fullWidth
                         margin="normal"
-                        value=""
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={serviceId}
+                        onChange={(e) => setServiceId(e.target.value)}
                         required placeholder="Entrez votre Service ID"
                     />
                     

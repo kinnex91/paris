@@ -8,6 +8,7 @@ const Toast = ({ message, type, duration = 3000, onClose }) => {
     const [visible, setVisible] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastType, setToastType] = useState('success');
+    const [toastDuration, setToastDuration] = useState(3000);
 
     useEffect(() => {
         if (message) {

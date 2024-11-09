@@ -9,7 +9,7 @@ function LoginPage() {
  
     return (
 
-          <FormRegister isSignup={false} />
+          <FormRegister isSignup={false}  urlPost='/auth/login' />
 
       );
     }
