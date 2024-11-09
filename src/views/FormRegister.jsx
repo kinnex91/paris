@@ -102,43 +102,37 @@ function FormRegister({ isSignup = false, onSubmit }) {
                 variants={animationVariants}
                 style={{ width: '100%', maxWidth: 400 }}
             >
+
+<div class="login-container">
+        <div class="login-box">
+
+
+
+        {!isSignup && (<h2>Connexion</h2>)}
+        {isSignup && (<h2>Inscription</h2>)}
+
                 <form
                     onSubmit={handleSubmit}
-                    style={{
-                        width: '100%',
-                        maxWidth: 400,
-                        backgroundColor: 'white',
-                        textAlign: 'center',
-                        padding: '20px',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                    }}
-                >
-                    
-                    {isSignup && (
-                        <Typography variant="h4" gutterBottom>
-                            S'inscire
-                         </Typography>
-                       )}
                   
-                    {isSignup && (
-                        <TextField
-                        label="Code de Service"
+                >
+                {isSignup && (
+                <div class="input-container">
+                    <label for="serviceId">Service ID</label>
+                    
+        <TextField
+                        label="Service ID"
                         variant="outlined"
                         fullWidth
-                       margin="normal"
-                        required
-                        />                       
-                    )}
-
-                    {!isSignup && (
-
-                        <Typography variant="h4" gutterBottom>
-                        Connexion
-                        </Typography>
-                    )}
-
-
+                        margin="normal"
+                        value=""
+                        onChange={(e) => setUsername(e.target.value)}
+                        required placeholder="Entrez votre Service ID"
+                    />
+                    
+                </div>
+                )}
+                <div class="input-container">
+                    <label for="email">Email</label>
                     <TextField
                         label="Email"
                         variant="outlined"
@@ -146,8 +140,13 @@ function FormRegister({ isSignup = false, onSubmit }) {
                         margin="normal"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        required
+                        required placeholder="Entrez votre email"
                     />
+                  
+                </div>
+                <div class="input-container">
+                    <label for="password">Mot de passe</label>
+                    {!isSignup && (
                     <TextField
                         label="Mot de passe"
                         type="password"
@@ -156,36 +155,52 @@ function FormRegister({ isSignup = false, onSubmit }) {
                         margin="normal"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        required
+                        required placeholder="Entrez votre mot de passe"
                     />
+              
+                    )}
+                         {isSignup && (
+                    <TextField
+                        label="Mot de passe"
+                        type="password"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required placeholder="Entrez votre mot de passe (taille de 12 minimum)"
+                    />
+              
+                    )}
+  </div>
 
-
-                    {isSignup && (
-
-                            <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            sx={{ mt: 2 }}
-                            >
-                            S'inscire
-                            </Button>
-                       )}
-
-                        {!  isSignup && (
-
-                        <Button
+                {!isSignup && (
+                <Button
+                className="login-button"
                         type="submit"
                         variant="contained"
                         color="primary"
                         fullWidth
-                        sx={{ mt: 2 }}
-                        >
-                        Se connecter
-                        </Button>
-                        )}
-                </form>
+                        sx={{ mt: 2 }}>
+                    Se connecter
+                    </Button>
+                 )}
+                {isSignup && (
+                <Button
+                className="login-button"
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        sx={{ mt: 2 }}>
+                    S'inscire
+                    </Button>
+                 )}
+            </form>
+        </div>
+    </div>
+
+
                 <Toast
                     message={toastMessage}
                     type={toastType}
