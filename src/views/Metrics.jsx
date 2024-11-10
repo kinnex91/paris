@@ -119,34 +119,51 @@ function Metrics() {
     <div className="metrics-container">
       <h2>Google Analytics Dashboard (Active & New Users)</h2>
       {chartData ? (
-        <div>
-
-          <div >
-            <Line style={{width : '100vh'}}
-              data={chartData}
-              options={{
-                responsive: true,
-                plugins: {
-                  legend: { position: 'top' },
+        <div className="metrics-container">
+        <div className="chart-wrapper">
+          <Line
+            data={chartData}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'top' },
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    maxRotation: 45,
+                    minRotation: 45,
+                    autoSkip: false, // Afficher toutes les dates
+                  },
                 },
-              }}
-            />
-          </div>
-
-
-          <div >
-            <Line
-              data={chartData2}
-              options={{
-                responsive: true,
-                plugins: {
-                  legend: { position: 'top' },
-                },
-              }}
-            />
-          </div>
-
+              },
+            }}
+          />
         </div>
+      
+        <div className="chart-wrapper">
+          <Line
+            data={chartData2}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'top' },
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    maxRotation: 45,
+                    minRotation: 45,
+                    autoSkip: false, // Afficher toutes les dates
+                  },
+                },
+              },
+            }}
+          />
+        </div>
+      </div>
 
 
 
