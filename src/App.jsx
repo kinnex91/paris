@@ -9,6 +9,8 @@ import Menu from './views/Menu.jsx';
 import LoginPage from './views/LoginPage.jsx';
 import RegisterPage from './views/RegisterPage.jsx';
 import AboutPage from './views/About.jsx';
+import VerifyEmailPage from './views/VerifyEmailPage.jsx';
+import Metrics from './views/Metrics.jsx';
 // justify-content: center;
 function App() {
 
@@ -27,6 +29,8 @@ function App() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<RegisterPage />} />
                     <Route path="/about" element={<AboutPage />} />
+                    <Route path="/verifyEmail" element={<VerifyEmailPage />} />
+                    <Route path="/metrics" element={<Metrics />} />
 
                     {/* Routes protégées */}
                    

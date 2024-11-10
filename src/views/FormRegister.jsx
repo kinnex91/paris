@@ -6,7 +6,6 @@ import { TextField, Button, Typography, Box } from '@mui/material';
 import Toast from './Toast.jsx';
 import { motion } from 'framer-motion';
 
-const API_BASE_URL = 'http://localhost:3007';
 
 
 
@@ -14,6 +13,7 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
 
     var isConnexion = true;
 
+    const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [serviceId, setServiceId] = useState('');
@@ -62,11 +62,9 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
 
         try {
             var rest = null;
-
-            if(isConnexion)
-                 res = await axios.post(`${API_BASE_URL}/auth/login`, { username, password });
-            else
-                res = await axios.post(`${API_BASE_URL}`+urlPost, { username, password });
+            console.log('before');
+            res = await axios.post('https://server.pronostics.devforever.ovh'+urlPost, { email, password });
+            console.log('after');
             
             const { jwt, message } = res.data;
 
@@ -165,7 +163,7 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
                 >
                 {isSignup && (
                 <div class="input-container">
-                    <label for="serviceId">Service ID</label>
+           
                     
         <TextField
                         label="Service ID"
@@ -180,20 +178,20 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
                 </div>
                 )}
                 <div class="input-container">
-                    <label for="email">Email</label>
+                 
                     <TextField
                         label="Email"
                         variant="outlined"
                         fullWidth
                         margin="normal"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required placeholder="Entrez votre email"
                     />
                   
                 </div>
                 <div class="input-container">
-                    <label for="password">Mot de passe</label>
+                
                     {!isSignup && (
                     <TextField
                         label="Mot de passe"
@@ -240,7 +238,7 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
                         variant="contained"
                         color="primary"
                         fullWidth
-                        sx={{ mt: 2 }}>
+                        sx={{ mt: 2 }} > 
                     S'inscire
                     </Button>
                  )}
