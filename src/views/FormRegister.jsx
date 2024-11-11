@@ -6,7 +6,8 @@ import { TextField, Button, Typography, Box } from '@mui/material';
 import Toast from './Toast.jsx';
 import { motion } from 'framer-motion';
 
-const API_BASE_URL = 'http://localhost:3007'; // URL de base pour l'API
+const API_BASE_URL = "https://backend-pronostics.devforever.ovh"; // URL de base pour l'API
+//const API_BASE_URL = "http://localhost:3007"; // URL de base pour l'API
 
 
 function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {

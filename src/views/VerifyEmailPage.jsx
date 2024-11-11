@@ -17,7 +17,7 @@ function VerifyEmailPage() {
     const token = searchParams.get('token');
 
     // Récupérer l'URL de l'API à partir de la variable d'environnement
-    const apiHost = process.env.BACKEND_URL ;
+    const apiHost = "https://backend-pronostics.devforever.ovh" ;
 
     // Fonction pour vérifier l'email
     const verifyEmail = async () => {
