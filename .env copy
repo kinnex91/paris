@@ -1,4 +1,0 @@
-API_BASE_URL=http://localhost:3007
-REACT_APP_ENV_HOSTNAME_FRONT_PROD=https://concours-pronostics.devforever.ovh
-REACT_APP_ENV_HOSTNAME_FRONT=http://localhost:3007
-VITE_ENV_HOSTNAME_FRONT=http://localhost:3007

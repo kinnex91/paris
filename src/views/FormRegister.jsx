@@ -6,7 +6,7 @@ import { TextField, Button, Typography, Box } from '@mui/material';
 import Toast from './Toast.jsx';
 import { motion } from 'framer-motion';
 
-
+const API_BASE_URL = 'http://localhost:3007'; // URL de base pour l'API
 
 
 function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
@@ -62,9 +62,19 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
 
         try {
             var rest = null;
-            console.log('before');
-            res = await axios.post('https://server.pronostics.devforever.ovh'+urlPost, { email, password });
-            console.log('after');
+        
+            const res = await axios.post(
+                `${API_BASE_URL}${urlPost}`,
+                { email, password },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    withCredentials: false,
+                }
+            );
+        
             
             const { jwt, message } = res.data;
 
@@ -149,8 +159,8 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
                 style={{ width: '100%', maxWidth: 400 }}
             >
 
-<div class="login-container">
-        <div class="login-box">
+<div className="login-container">
+        <div className="login-box">
 
 
 
@@ -162,7 +172,7 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
                   
                 >
                 {isSignup && (
-                <div class="input-container">
+                <div className="input-container">
            
                     
         <TextField
@@ -177,7 +187,7 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
                     
                 </div>
                 )}
-                <div class="input-container">
+                <div className="input-container">
                  
                     <TextField
                         label="Email"
@@ -190,7 +200,7 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
                     />
                   
                 </div>
-                <div class="input-container">
+                <div className="input-container">
                 
                     {!isSignup && (
                     <TextField
