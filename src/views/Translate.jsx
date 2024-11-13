@@ -31,10 +31,9 @@ function Translate() {
         value: lang.code,
         label: `${lang.name} (${lang.code.toUpperCase()})`,
       }));
-      alert("before");
+     
       setLanguages(languageOptions);
-      alert("fafter");
-      alert(languageOptions);
+
     } catch (error) {
       console.error('Erreur lors de la récupération des langues:', error);
     }
@@ -43,7 +42,7 @@ function Translate() {
 
 
     useEffect(() => {
-        alert("go fetch")
+ 
         fetchLanguages();
       }, []);
 
@@ -98,7 +97,7 @@ function Translate() {
         if (document.readyState === 'complete') {
        
             const elements = document.body; // On prend tout le body
-            alert('traduit page en cours');
+            
             await translateNode(elements, targetLang);
         }
 
