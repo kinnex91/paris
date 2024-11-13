@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Typography, Box } from '@mui/material';
 import Toast from './Toast.jsx';
 import { motion } from 'framer-motion';
+import { ElectricBikeSharp } from '@mui/icons-material';
 
 const API_BASE_URL = "https://backend-pronostics.devforever.ovh"; // URL de base pour l'API
 //const API_BASE_URL = "http://localhost:3007"; // URL de base pour l'API
@@ -77,38 +78,50 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
             );
         
             
+            
             const { jwt, message } = res.data;
 
             // Stocker le token JWT dans le localStorage
             localStorage.setItem('jwt', jwt);
 
             setToastType('success');
-            setToastMessage(message || 'Connexion réussie');
+
+            if(isConnexion)
+                setToastMessage(message || 'Connexion réussie');
+            else
+                setToastMessage(message || 'Si votre code de service est valide, vous recevrez un mail de noreply@ pour valider votre inscirption. Vérifiez vos spams.');
 
             // Déclencher l'animation de fondu avec flou
             setIsFirstLoad(false);
             setIsAnimating(true);
-            setTimeout(() => navigate('/recipes'), 2000); // Délai de 2 secondes pour laisser l'animation se dérouler
+            setTimeout(() => navigate('/recipes'), 7000); // Délai pour laisser l'animation du ToastMessage se dérouler
 
         } catch (error) {
            
- 
-
-            const  errorMessage = error.response?.data?.message || 'Erreur lors de la connexion.'
             
+
+            const  errorMessage = error.response?.data?.message
+            const  statusCode = error.response?.data?.status
+
             {isSignup && (setToastDuration(17000))}
 
             if(isConnexion)
             {
                 console.error('Erreur de connexion:', error);
+                
                 setToastType('error');
                 setToastMessage(errorMessage);
     
             }else{
+                console.error("Erreur lors d'inscription:", error);
+                if(statusCode==601)
+                    setToastMessage("Une erreur est survenue. Il semble que vous soyez déjà inscrit. Si vous n'aveiez pas valider votre adresse email, vérifier votre boite de réception.");
+                else
+                    setToastMessage("Une erreur est survenue. Envoyez un email à l'adresse de contact avec votre heure de t'entative d'inscription si le problème persiste");
                 
-                setToastDuration(20000);
-                setToastType('info');
-                setToastMessage('Si votre code de service est valide, vous recevrez un mail de noreply@ pour valider votre inscirption. Vérifiez vos spams.');
+                 setToastDuration(20000);
+                setToastType('error');
+                
             }
        
 

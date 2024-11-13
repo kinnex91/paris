@@ -86,7 +86,7 @@ function Metrics() {
       datasets: [
 
         {
-          label: 'averageSessionDuration',
+          label: 'Temps moyen des sessions (en secondes)',
           data: averageSessionDuration,
           borderColor: 'rgba(30, 20, 5, 1)', // Couleur rouge pour newUsers
           backgroundColor: 'rgba(35, 30, 5, 0.2)',

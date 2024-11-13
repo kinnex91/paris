@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect,useState } from 'react';
 import {Route, Routes} from 'react-router-dom';
 
 //--> on mettra dans chaque page le css, ici au pire juste le minimul legal le body class --> 
@@ -11,17 +11,25 @@ import RegisterPage from './views/RegisterPage.jsx';
 import AboutPage from './views/About.jsx';
 import VerifyEmailPage from './views/VerifyEmailPage.jsx';
 import Metrics from './views/Metrics.jsx';
+import Translate from './views/Translate.jsx';
+
+
+
+
+
 // justify-content: center;
 function App() {
+
+
+
 
     return (
         <>
             
          
       
-                <Menu/>
+                <Translate/>
 
-              
 
                 <Routes>
 

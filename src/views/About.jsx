@@ -1,18 +1,19 @@
 import React from 'react';
 import '../css/style.css'; 
+import Translate from './Translate';
 
 function AboutPage() {
     return (
         <>
 
           
-    <div class="about-container">
+    <div className="about-container">
         <h2>À propos de notre plateforme</h2>
         <p>
             Bienvenue sur notre plateforme de paris sportifs. Nous proposons un espace pour les passionnés de sport qui souhaitent parier sur leurs équipes et événements sportifs préférés.
         </p>
         <h3>Disclaimer</h3>
-        <p class="disclaimer">
+        <p className="disclaimer">
             <strong>Attention :</strong> Cette plateforme ne propose pas de jeux d'argent. Les paris effectués ici ne sont pas associés à des gains financiers réels.
             Conformément à la législation française, les jeux d'argent en ligne sont strictement réglementés. Ce site est destiné uniquement à des fins de divertissement.
             Aucun échange d'argent ou de gains monétaires n'est proposé ici.
@@ -22,12 +23,15 @@ function AboutPage() {
         </p>
 
        
-        <div class="linkedin-container">
-            <a href="https://www.linkedin.com/in/emmanuel-frenot-ef75000123456789abc-senior-edf-java-it-project-manager-france-arkance-systems-com-fr/" target="_blank" class="linkedin-button">
+        <div className="linkedin-container">
+            <a href="https://www.linkedin.com/in/emmanuel-frenot-ef75000123456789abc-senior-edf-java-it-project-manager-france-arkance-systems-com-fr/" target="_blank" className="linkedin-button">
                 Voir mon profil LinkedIn
             </a>
         </div>
     </div>
+
+
+
         </>
     );
 }
