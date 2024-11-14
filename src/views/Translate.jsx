@@ -14,16 +14,21 @@ import { Margin } from '@mui/icons-material';
 function Translate() {
 
     const { i18n } = useTranslation();
-    const [actualLang, setActualLang] = useState('fr');
-    const [newLang, setNewLang] = useState('fr');
+    const [actualLang, setActualLang] = useState(() => {
+        // Récupérer la langue depuis localStorage ou utiliser 'fr' par défaut
+        return localStorage.getItem('selectedLang') || 'fr';
+      });
+    const [newLang, setNewLang] = useState('');
 
     const [languages, setLanguages] = useState([]);
+    const LIBRETRANSLATE_SERVER = import.meta.env.VITE_LIBRETRANSLATE_SERVER;
 
+    
  // Fonction pour récupérer la liste des langues supportées depuis l'API
  const fetchLanguages = async () => {
     try {
 
-      const response = await axios.get('http://localhost:5000/languages', {
+        const response = await axios.get(`${LIBRETRANSLATE_SERVER}/languages`, {
   
 
     });
@@ -55,10 +60,13 @@ function Translate() {
 
         i18n.changeLanguage(lang);
         translatePage(lang);
+
+        // pour sauevagrder la langue sélectionnée quand on changera de page
+        localStorage.setItem('selectedLang', lang);
     };
     const translateText = async (text, targetLang) => {
         try {
-            const response = await axios.post('http://localhost:5000/translate', {
+            const response = await axios.post(`${LIBRETRANSLATE_SERVER}/translate`, {
                 q: text,
                 source: 'auto',
                 target: targetLang,
@@ -109,17 +117,14 @@ function Translate() {
             await translatePage(actualLang);
         };
 
-        // Vérifie l'URL actuelle de la page
+        // On verifie que le statut 400 complete n'est pas un appel à libretranslate sinon on va boucler !
         const currentUrl = document.URL;
-        const isCorrectUrl = currentUrl.includes('http://localhost:5000'); // Modifie cette URL selon ton besoin
+        const isCorrectUrl = currentUrl.includes(`${LIBRETRANSLATE_SERVER}`);
 
         // Vérifie si la page est déjà complètement chargée
         if (document.readyState === 'complete' && !isCorrectUrl) {
-            onPageLoad();
-        } else {
-            // Sinon, exécute la fonction après le chargement complet de la page
-            // window.addEventListener('load', onPageLoad);
-            //return () => window.removeEventListener('load', onPageLoad);
+            if(actualLang!='fr')
+                onPageLoad();
         }
     }, [actualLang]);
 
@@ -145,6 +150,7 @@ function Translate() {
           options={languages}
           onChange={changeLanguage}
           defaultValue={{ value: 'fr', label: 'Français (FR)' }}
+          value={languages.find(option => option.value === actualLang)}
           isSearchable
           className="doNotTraduct"
           placeholder="Choisissez une langue"
