@@ -12,8 +12,8 @@ import AboutPage from './views/About.jsx';
 import VerifyEmailPage from './views/VerifyEmailPage.jsx';
 import Metrics from './views/Metrics.jsx';
 import Translate from './views/Translate.jsx';
-
-
+import Logout from './views/Logout.jsx';
+import Logged from './views/Logged.jsx';
 
 
 
@@ -39,7 +39,8 @@ function App() {
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/verifyEmail" element={<VerifyEmailPage />} />
                     <Route path="/metrics" element={<Metrics />} />
-
+                    <Route path="/logout" element={<Logout />} />
+                    <Route path="/logged" element={<Logged />} />
                     {/* Routes protégées */}
                    
                 </Routes>

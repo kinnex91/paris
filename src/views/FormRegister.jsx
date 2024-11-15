@@ -80,28 +80,28 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
             
             
             const { jwt, message } = res.data;
-            alert('after connexion '+jwt);
-            
+    
+
             // Stocker le token JWT dans le localStorage
             localStorage.setItem('jwt', jwt);
 
             setToastType('success');
 
             if(isConnexion)
-                setToastMessage(message || 'Connexion réussie');
+                setToastMessage('Connexion réussie');
             else
-                setToastMessage(message || 'Si votre code de service est valide, vous recevrez un mail de noreply@ pour valider votre inscirption. Vérifiez vos spams.');
+                setToastMessage('Si votre code de service est valide, vous recevrez un mail de noreply@ pour valider votre inscirption. Vérifiez vos spams.');
 
             // Déclencher l'animation de fondu avec flou
             setIsFirstLoad(false);
             setIsAnimating(true);
 
-            if(!isConnexion)
-                 setTimeout(() => navigate('/'), 7000); // Délai pour laisser l'animation du ToastMessage se dérouler
+
+            setTimeout(() => navigate('/logged'), 2000); // Délai pour laisser l'animation du ToastMessage se dérouler
 
         } catch (error) {
            
-            
+
 
             const  errorMessage = error.response?.data?.message
             const  statusCode = error.response?.data?.status

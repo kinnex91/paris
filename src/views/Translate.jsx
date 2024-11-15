@@ -33,10 +33,13 @@ function Translate() {
 
     const checkIfLoggedIn = async () => {
         try {
-            const token = localStorage.getItem('jwt');
+            const jwt = localStorage.getItem('jwt');
+            if(jwt==null || jwt=="null")
+                return false;
+
             const response = await axios.get(`${BACKEND_URL}/auth/is-logged-in`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,           
+                    Authorization: `Bearer ${jwt}`,           
                 },
             });
             setIsLoggedIn(response.data.isLoggedIn);
@@ -47,10 +50,13 @@ function Translate() {
 
     const checkIfAdmin = async () => {
         try {
-            const token = localStorage.getItem('jwt');
+            const jwt = localStorage.getItem('jwt');
+            if(jwt==null || jwt=="null")
+                return false;
+
             const response = await axios.get(`${BACKEND_URL}/auth/is-admin`, {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${jwt}`,
                 },
             });
             setIsAdmin(response.data.isAdmin);
@@ -223,14 +229,12 @@ function Translate() {
                                 {/*Ci-dessous nous sommes connecté mais PAS ADMIN */}
                                 {!isAdmin && (
                                     <ul className="menu">
-                                        {!isLoggedIn && (
-                                            <li><a href="/login">Connexion</a></li>
-                                        )}
+
                                         {isLoggedIn && (
                                             <li><a href="/logout">Déconnexion</a></li>
                                         )}
 
-                                        <li><a href="/signup">Inscription</a></li>
+                                    
                                         <li><a href="/about">À propos</a></li>
                                         <li><a href="/metrics">Metriques Web</a></li>
                                     </ul>
@@ -247,7 +251,8 @@ function Translate() {
                                 <li><a href="/login">Connexion</a></li>
                                 <li><a href="/signup">Inscription</a></li>
                                 <li><a href="/about">À propos</a></li>
-                                <li><a href="/metrics">Metriques Web</a></li>
+
+
                             </ul>
                         )
 

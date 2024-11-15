@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
     plugins: [react()],
     server: {
-        port: 15004, // Définir le port ici
+        port: 15002, // Définir le port ici
         open: false, // (optionnel) Ouvre automatiquement le navigateur
         fs: {
             allow: ['.', '/home/webnunu/paris']
