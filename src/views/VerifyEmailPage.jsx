@@ -17,7 +17,7 @@ function VerifyEmailPage() {
     const token = searchParams.get('token');
 
     // Récupérer l'URL de l'API à partir de la variable d'environnement
-    const apiHost = "https://backend-pronostics.devforever.ovh" ;
+    const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
     // Fonction pour vérifier l'email
     const verifyEmail = async () => {
@@ -28,7 +28,7 @@ function VerifyEmailPage() {
 
         try {
             // Faire l'appel API pour vérifier l'email
-            console.log(`${apiHost}/auth/verify-email?token=${token}`)
+            console.log(`${API_BASE_URL}/auth/verify-email?token=${token}`)
             const response = await axios.get(`${apiHost}/auth/verify-email?token=${token}`);
 
             if (response.data.message === 'Email successfully verified') {

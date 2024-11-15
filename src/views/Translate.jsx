@@ -25,6 +25,7 @@ function Translate() {
     const [languages, setLanguages] = useState([]);
     const [loading, setLoading] = useState(false); // État pour le loader
     const LIBRETRANSLATE_SERVER = import.meta.env.VITE_LIBRETRANSLATE_SERVER;
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     const [isAdmin, setIsAdmin] = useState(false);
 
@@ -32,10 +33,10 @@ function Translate() {
 
     const checkIfLoggedIn = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${LIBRETRANSLATE_SERVER}/auth/is-logged-in`, {
+            const token = localStorage.getItem('jwt');
+            const response = await axios.get(`${BACKEND_URL}/auth/is-logged-in`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,           
                 },
             });
             setIsLoggedIn(response.data.isLoggedIn);
@@ -46,10 +47,10 @@ function Translate() {
 
     const checkIfAdmin = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${LIBRETRANSLATE_SERVER}/auth/is-admin`, {
+            const token = localStorage.getItem('jwt');
+            const response = await axios.get(`${BACKEND_URL}/auth/is-admin`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    'Authorization': `Bearer ${token}`,
                 },
             });
             setIsAdmin(response.data.isAdmin);
@@ -93,6 +94,8 @@ function Translate() {
     };
     const translateText = async (text, targetLang) => {
         try {
+         
+
             const response = await axios.post(`${LIBRETRANSLATE_SERVER}/translate`, {
                 q: text,
                 source: 'auto',
@@ -134,6 +137,9 @@ function Translate() {
     };
 
     const translatePage = async (targetLang) => {
+        if(targetLang=='')
+            return;
+
         setLoading(true); // Activer le loader
 
         if (document.readyState === 'complete') {

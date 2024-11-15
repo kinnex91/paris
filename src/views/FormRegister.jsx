@@ -7,8 +7,8 @@ import Toast from './Toast.jsx';
 import { motion } from 'framer-motion';
 import { ElectricBikeSharp } from '@mui/icons-material';
 
-const API_BASE_URL = "https://backend-pronostics.devforever.ovh"; // URL de base pour l'API
-//const API_BASE_URL = "http://localhost:3007"; // URL de base pour l'API
+
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 
 function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
@@ -80,7 +80,8 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
             
             
             const { jwt, message } = res.data;
-
+            alert('after connexion '+jwt);
+            
             // Stocker le token JWT dans le localStorage
             localStorage.setItem('jwt', jwt);
 
@@ -94,7 +95,9 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
             // Déclencher l'animation de fondu avec flou
             setIsFirstLoad(false);
             setIsAnimating(true);
-            setTimeout(() => navigate('/recipes'), 7000); // Délai pour laisser l'animation du ToastMessage se dérouler
+
+            if(!isConnexion)
+                 setTimeout(() => navigate('/'), 7000); // Délai pour laisser l'animation du ToastMessage se dérouler
 
         } catch (error) {
            

@@ -101,7 +101,9 @@ function Metrics() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://server.pronostics.devforever.ovh/api/analytics');
+        const API_GA_URL = import.meta.env.VITE_BACKEND_GA_URL;
+        const response = await axios.get(`https://${API_GA_URL}/api/analytics`);
+        
         setData(response.data);
         const chartFormattedData = transformDataForChart(response.data);
         const chartFormattedData2 = transformDataForChart2(response.data);
