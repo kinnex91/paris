@@ -6,8 +6,11 @@ import axios from 'axios';
 import Select from 'react-select';
 
 import '../css/style.css';
-import { Margin } from '@mui/icons-material';
+import '../css/loader.css';
+import '../css/menu.css';
 
+import { Margin } from '@mui/icons-material';
+import ClipLoader from 'react-spinners/ClipLoader';//pour le loader
 
 
 
@@ -17,41 +20,65 @@ function Translate() {
     const [actualLang, setActualLang] = useState(() => {
         // Récupérer la langue depuis localStorage ou utiliser 'fr' par défaut
         return localStorage.getItem('selectedLang') || 'fr';
-      });
+    });
     const [newLang, setNewLang] = useState('');
-
     const [languages, setLanguages] = useState([]);
+    const [loading, setLoading] = useState(false); // État pour le loader
     const LIBRETRANSLATE_SERVER = import.meta.env.VITE_LIBRETRANSLATE_SERVER;
 
-    
- // Fonction pour récupérer la liste des langues supportées depuis l'API
- const fetchLanguages = async () => {
-    try {
+    const [isAdmin, setIsAdmin] = useState(false);
 
-        const response = await axios.get(`${LIBRETRANSLATE_SERVER}/languages`, {
-  
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    });
-    const languageOptions = response.data.map((lang) => ({
-        value: lang.code,
-        label: `${lang.name} (${lang.code.toUpperCase()})`,
-      }));
-     
-      setLanguages(languageOptions);
+    const checkIfLoggedIn = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${LIBRETRANSLATE_SERVER}/auth/is-logged-in`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setIsLoggedIn(response.data.isLoggedIn);
+        } catch (error) {
+            console.error('Erreur lors de la vérification de la connexion', error);
+        }
+    };
 
-    } catch (error) {
-      console.error('Erreur lors de la récupération des langues:', error);
-    }
-  };
+    const checkIfAdmin = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${LIBRETRANSLATE_SERVER}/auth/is-admin`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setIsAdmin(response.data.isAdmin);
+        } catch (error) {
+            console.error('Erreur lors de la vérification de l\'administrateur', error);
+        }
+    };
+
+    // Fonction pour récupérer la liste des langues supportées depuis l'API
+    const fetchLanguages = async () => {
+        try {
+
+            const response = await axios.get(`${LIBRETRANSLATE_SERVER}/languages`, {
 
 
+            });
+            const languageOptions = response.data.map((lang) => ({
+                value: lang.code,
+                label: `${lang.name} (${lang.code.toUpperCase()})`,
+            }));
 
-    useEffect(() => {
- 
-        fetchLanguages();
-      }, []);
+            setLanguages(languageOptions);
 
-      
+        } catch (error) {
+            console.error('Erreur lors de la récupération des langues:', error);
+        }
+    };
+
+
     const changeLanguage = (select_var) => {
         var lang = select_var.value;
         setActualLang(newLang);
@@ -85,7 +112,12 @@ function Translate() {
 
     const translateNode = async (node, targetLang) => {
         // Ignorer les éléments avec la classe "doNotTraduct"
-        if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('doNotTraduct')) {
+        if (
+            node.nodeType === Node.ELEMENT_NODE &&
+            (node.classList.contains('doNotTraduct') ||
+                node.tagName.toUpperCase() === 'SCRIPT' ||
+                node.tagName.toUpperCase() === 'NOSCRIPT')
+        ) {
             return; // Ne pas traduire cet élément
         }
 
@@ -102,17 +134,25 @@ function Translate() {
     };
 
     const translatePage = async (targetLang) => {
+        setLoading(true); // Activer le loader
+
         if (document.readyState === 'complete') {
-       
+
             const elements = document.body; // On prend tout le body
-            
+
             await translateNode(elements, targetLang);
         }
+        setLoading(false); // Désactiver le loader
 
     };
 
     // Traduire la page au chargement du composant
     useEffect(() => {
+
+        checkIfLoggedIn();
+        checkIfAdmin();
+        fetchLanguages();
+
         const onPageLoad = async () => {
             await translatePage(actualLang);
         };
@@ -123,43 +163,105 @@ function Translate() {
 
         // Vérifie si la page est déjà complètement chargée
         if (document.readyState === 'complete' && !isCorrectUrl) {
-            if(actualLang!='fr')
+            if (actualLang != 'fr')
                 onPageLoad();
         }
     }, [actualLang]);
 
-   
+
     return (
         <>
-        <div>
-       
-            <nav className="navbar centerAPPBodyPanel">
-      <ul>
-        <li><a href="/login">Connexion</a></li>
-        <li><a href="/signup">Inscription</a></li>
-        <li><a href="/about">À propos</a></li>
-        <li><a href="/metrics">Metriques Web</a></li>
-      </ul>
+            {/* Afficher le loader si la traduction est en cours */}
+            {loading && (
+                <div className="loader">
+                    <ClipLoader size={50} color={"#123abc"} loading={loading} />
+                    <p className="doNotTraduct loading-text">Translation in progress ... please wait</p>
+                </div>
+            )}
+
+            {!loading && (
+                <div>
+                    <nav className="navbar centerAPPBodyPanel">
+
+                        {/*Ci-dessous nous sommes est connecté */}
+                        {isLoggedIn && (
+
+                            <>
+                                {/*Ci-dessous nous sommes connecté et ADMIN */}
+                                {isAdmin && (
+                                    <>
+                                        <ul className="menu">
+                                            <li>
+                                                <a href="#">Admin Dashboard</a>
+                                                <ul className="submenu">
+                                                    <li><a href="/admin/manage-users">Manage Users</a></li>
+                                                    <li><a href="/admin/manage-ligue">Manage Ligue</a></li>
+                                                    <li><a href="/admin/manage-team">Manage Team</a></li>
+                                                    <li><a href="/admin/manage-tournament">Manage Tournament</a></li>
+                                                    <li><a href="/admin/manage-results">Manage Results</a></li>
+                                                </ul>
+                                            </li>
+
+                                            <li>
+                                                <ul className="menu">
+                                                    <li><a href="/about">À propos</a></li>
+                                                    <li><a href="/metrics">Metriques Web</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
 
 
+                                    </>
+                                )}
 
+                                {/*Ci-dessous nous sommes connecté mais PAS ADMIN */}
+                                {!isAdmin && (
+                                    <ul className="menu">
+                                        {!isLoggedIn && (
+                                            <li><a href="/login">Connexion</a></li>
+                                        )}
+                                        {isLoggedIn && (
+                                            <li><a href="/logout">Déconnexion</a></li>
+                                        )}
 
-    </nav>
-    
-    <Select
-          options={languages}
-          onChange={changeLanguage}
-          defaultValue={{ value: 'fr', label: 'Français (FR)' }}
-          value={languages.find(option => option.value === actualLang)}
-          isSearchable
-          className="doNotTraduct"
-          placeholder="Choisissez une langue"
-          style={{ float: 'right', width: '80px'}}
-        />
+                                        <li><a href="/signup">Inscription</a></li>
+                                        <li><a href="/about">À propos</a></li>
+                                        <li><a href="/metrics">Metriques Web</a></li>
+                                    </ul>
+                                )}
+                            </>
 
-    </div>
+                        )
+                        }
 
-  
+                          {/*Ci-dessous nous sommes PAS connecté */}
+                        {!isLoggedIn && (
+                            <ul className="menu">
+
+                                <li><a href="/login">Connexion</a></li>
+                                <li><a href="/signup">Inscription</a></li>
+                                <li><a href="/about">À propos</a></li>
+                                <li><a href="/metrics">Metriques Web</a></li>
+                            </ul>
+                        )
+
+                        }
+
+                    </nav>
+                    
+                    {/*FEATURES-XXX As a user connected or not if my default language is the same that the language display page on this site remove this select box and dont' call the default route /list-language to improve performance and user experience */}
+                    <Select
+                        options={languages}
+                        onChange={changeLanguage}
+                        defaultValue={{ value: 'fr', label: 'Français (FR)' }}
+                        value={languages.find(option => option.value === actualLang)}
+                        isSearchable
+                        className="doNotTraduct"
+                        placeholder="Choisissez une langue"
+                        style={{ float: 'right', width: '80px' }}
+                    />
+                </div>
+            )}
         </>
     );
 

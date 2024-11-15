@@ -1,0 +1,74 @@
+/* Style général pour la barre de navigation */
+.navbar {
+    background-color: #3f51b5;
+    padding: 10px 20px;
+    width: 100%;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Style des listes dans la navbar */
+.navbar ul {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar ul li {
+    position: relative;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+    color: #ffeb3b;
+}
+
+/* Style pour le menu déroulant */
+.menu .submenu {
+    display: none;
+    position: absolute;
+    background-color: #3f51b5;
+    padding: 10px;
+    list-style: none;
+    top: 100%;
+    left: 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    z-index: 1000;
+}
+
+.menu li:hover .submenu {
+    display: block;
+}
+
+.submenu li {
+    padding: 5px 10px;
+}
+
+.submenu li a {
+    color: white;
+    text-decoration: none;
+}
+
+.submenu li a:hover {
+    color: #ffeb3b;
+}
+
+/* Style pour centrer le select */
+.select-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 10px;
+}
