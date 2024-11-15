@@ -1,116 +1,148 @@
 import React, { useEffect, useState } from 'react';
-
 import { useTranslation } from 'react-i18next';
-import i18n from '../js/i118n.js'; // Importer l'instance i18n
 import axios from 'axios';
 import Select from 'react-select';
-
+import ClipLoader from 'react-spinners/ClipLoader';
 import '../css/style.css';
 import '../css/loader.css';
 import '../css/menu.css';
-
-import { Margin } from '@mui/icons-material';
-import ClipLoader from 'react-spinners/ClipLoader';//pour le loader
-
-
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function Translate() {
-
     const { i18n } = useTranslation();
-    const [actualLang, setActualLang] = useState(() => {
-        // Récupérer la langue depuis localStorage ou utiliser 'fr' par défaut
-        return localStorage.getItem('selectedLang') || 'fr';
-    });
-    const [newLang, setNewLang] = useState('');
+    const [actualLang, setActualLang] = useState(() => localStorage.getItem('selectedLang') || 'fr');
+    /*const [languages, setLanguages] = useState(() => {
+        const storedLanguages = localStorage.getItem('languages');
+        return storedLanguages ? storedLanguages : [];
+    });*/
     const [languages, setLanguages] = useState([]);
-    const [loading, setLoading] = useState(false); // État pour le loader
+    const [loading, setLoading] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('loggedIn') || false);
+
+    const location = useLocation();
+
     const LIBRETRANSLATE_SERVER = import.meta.env.VITE_LIBRETRANSLATE_SERVER;
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-    const [isAdmin, setIsAdmin] = useState(false);
-
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+    // Vérifier si l'utilisateur est connecté
     const checkIfLoggedIn = async () => {
-        try {
-            const jwt = localStorage.getItem('jwt');
-            if(jwt==null || jwt=="null")
-                return false;
+        const jwt = localStorage.getItem('jwt');
+        if (!jwt || jwt === 'null') {
+            setIsLoggedIn(false);
+            localStorage.setItem('loggedIn', false);
+            return;
+        }
 
+        try {
             const response = await axios.get(`${BACKEND_URL}/auth/is-logged-in`, {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,           
-                },
+                headers: { Authorization: `Bearer ${jwt}` }
             });
             setIsLoggedIn(response.data.isLoggedIn);
+            localStorage.setItem('loggedIn', response.data.isLoggedIn);
         } catch (error) {
             console.error('Erreur lors de la vérification de la connexion', error);
+            setIsLoggedIn(false);
+            localStorage.setItem('loggedIn', false);
         }
     };
 
+    // Vérifier si l'utilisateur est un admin
     const checkIfAdmin = async () => {
-        try {
-            const jwt = localStorage.getItem('jwt');
-            if(jwt==null || jwt=="null")
-                return false;
+        const jwt = localStorage.getItem('jwt');
+        if (!jwt || jwt === 'null') {
+            setIsAdmin(false);
+            return;
+        }
 
+        try {
             const response = await axios.get(`${BACKEND_URL}/auth/is-admin`, {
-                headers: {
-                    'Authorization': `Bearer ${jwt}`,
-                },
+                headers: { Authorization: `Bearer ${jwt}` }
             });
             setIsAdmin(response.data.isAdmin);
         } catch (error) {
             console.error('Erreur lors de la vérification de l\'administrateur', error);
+            setIsAdmin(false);
         }
     };
 
-    // Fonction pour récupérer la liste des langues supportées depuis l'API
+    useEffect(() => {
+        const path = location.pathname;
+        if (path === '/logged' || path === '/logout') {
+
+            checkIfLoggedIn();
+            checkIfAdmin();
+
+        }
+
+        fetchLanguages();
+
+        if (actualLang != 'fr')
+            translatePage(actualLang);
+
+    }, [location]); // Rafraîchir chaque fois que la route change
+
+    // Récupérer la liste des langues depuis l'API
     const fetchLanguages = async () => {
         try {
-
-            const response = await axios.get(`${LIBRETRANSLATE_SERVER}/languages`, {
-
-
-            });
+            const response = await axios.get(`${LIBRETRANSLATE_SERVER}/languages`);
             const languageOptions = response.data.map((lang) => ({
                 value: lang.code,
-                label: `${lang.name} (${lang.code.toUpperCase()})`,
+                label: `${lang.name} (${lang.code.toUpperCase()})`
             }));
-
             setLanguages(languageOptions);
+            localStorage.setItem('languages', languageOptions);
 
         } catch (error) {
             console.error('Erreur lors de la récupération des langues:', error);
         }
     };
 
-
-    const changeLanguage = (select_var) => {
-        var lang = select_var.value;
-        setActualLang(newLang);
-        setNewLang(lang);
-
-
+    // Changer la langue
+    const changeLanguage = (selectedOption) => {
+        const lang = selectedOption.value;
+        setActualLang(lang);
         i18n.changeLanguage(lang);
-        translatePage(lang);
-
-        // pour sauevagrder la langue sélectionnée quand on changera de page
         localStorage.setItem('selectedLang', lang);
+        translatePage(lang);
     };
+
+    const translatePage = async (targetLang) => {
+        setLoading(true);
+        if (document.readyState === 'complete') {
+            const elements = document.body;
+            await translateNode(elements, targetLang);
+        }
+        setLoading(false);
+    };
+
+    const translateNode = async (node, targetLang) => {
+        if (
+            node.nodeType === Node.ELEMENT_NODE &&
+            (node.classList.contains('doNotTraduct') ||
+                node.tagName.toUpperCase() === 'SCRIPT' ||
+                node.tagName.toUpperCase() === 'NOSCRIPT')
+        ) {
+            return;
+        }
+
+        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+            const translatedText = await translateText(node.textContent, targetLang);
+            node.textContent = translatedText;
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            for (const childNode of node.childNodes) {
+                await translateNode(childNode, targetLang);
+            }
+        }
+    };
+
     const translateText = async (text, targetLang) => {
         try {
-         
-
             const response = await axios.post(`${LIBRETRANSLATE_SERVER}/translate`, {
                 q: text,
                 source: 'auto',
                 target: targetLang,
-                format: 'text',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
+                format: 'text'
             });
             return response.data.translatedText;
         } catch (error) {
@@ -119,71 +151,33 @@ function Translate() {
         }
     };
 
-    const translateNode = async (node, targetLang) => {
-        // Ignorer les éléments avec la classe "doNotTraduct"
-        if (
-            node.nodeType === Node.ELEMENT_NODE &&
-            (node.classList.contains('doNotTraduct') ||
-                node.tagName.toUpperCase() === 'SCRIPT' ||
-                node.tagName.toUpperCase() === 'NOSCRIPT')
-        ) {
-            return; // Ne pas traduire cet élément
-        }
-
-        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
-            // Si c'est un nœud de texte non vide, on le traduit
-            const translatedText = await translateText(node.textContent, targetLang);
-            node.textContent = translatedText;
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-            // Si c'est un élément, on traite chaque enfant
-            for (const childNode of node.childNodes) {
-                await translateNode(childNode, targetLang);
-            }
+    const handleLogout = async () => {
+        const token = localStorage.getItem('jwt');
+        try {
+            await axios.get(`${BACKEND_URL}/auth/logout`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            localStorage.removeItem('jwt');
+            nabigate("/login");
+            window.location.reload();
+        } catch (error) {
+            console.error('Erreur lors de la déconnexion', error);
         }
     };
 
-    const translatePage = async (targetLang) => {
-        if(targetLang=='')
-            return;
+    const handleLogin = async () => {
 
-        setLoading(true); // Activer le loader
+        try {
 
-        if (document.readyState === 'complete') {
-
-            const elements = document.body; // On prend tout le body
-
-            await translateNode(elements, targetLang);
+            navigate("/logged");
+            window.location.reload();
+        } catch (error) {
+            console.error('Erreur lors de la connexion ou l\'enregistrement', error);
         }
-        setLoading(false); // Désactiver le loader
-
     };
-
-    // Traduire la page au chargement du composant
-    useEffect(() => {
-
-        checkIfLoggedIn();
-        checkIfAdmin();
-        fetchLanguages();
-
-        const onPageLoad = async () => {
-            await translatePage(actualLang);
-        };
-
-        // On verifie que le statut 400 complete n'est pas un appel à libretranslate sinon on va boucler !
-        const currentUrl = document.URL;
-        const isCorrectUrl = currentUrl.includes(`${LIBRETRANSLATE_SERVER}`);
-
-        // Vérifie si la page est déjà complètement chargée
-        if (document.readyState === 'complete' && !isCorrectUrl) {
-            if (actualLang != 'fr')
-                onPageLoad();
-        }
-    }, [actualLang]);
-
 
     return (
         <>
-            {/* Afficher le loader si la traduction est en cours */}
             {loading && (
                 <div className="loader">
                     <ClipLoader size={50} color={"#123abc"} loading={loading} />
@@ -191,7 +185,7 @@ function Translate() {
                 </div>
             )}
 
-            {!loading && (
+            
                 <div>
                     <nav className="navbar centerAPPBodyPanel">
 
@@ -216,6 +210,7 @@ function Translate() {
 
                                             <li>
                                                 <ul className="menu">
+                                                    <li><a href="/logout" onClick={handleLogout}>Déconnexion</a></li>
                                                     <li><a href="/about">À propos</a></li>
                                                     <li><a href="/metrics">Metriques Web</a></li>
                                                 </ul>
@@ -231,10 +226,10 @@ function Translate() {
                                     <ul className="menu">
 
                                         {isLoggedIn && (
-                                            <li><a href="/logout">Déconnexion</a></li>
+                                            <li><a href="/logout" onClick={handleLogout}>Déconnexion</a></li>
                                         )}
 
-                                    
+
                                         <li><a href="/about">À propos</a></li>
                                         <li><a href="/metrics">Metriques Web</a></li>
                                     </ul>
@@ -244,12 +239,12 @@ function Translate() {
                         )
                         }
 
-                          {/*Ci-dessous nous sommes PAS connecté */}
+                        {/*Ci-dessous nous sommes PAS connecté */}
                         {!isLoggedIn && (
                             <ul className="menu">
 
-                                <li><a href="/login">Connexion</a></li>
-                                <li><a href="/signup">Inscription</a></li>
+                                <li><a href="/login" onClick={handleLogin}>Connexion</a></li>
+                                <li><a href="/signup" onClick={handleLogin}>Inscription</a></li>
                                 <li><a href="/about">À propos</a></li>
 
 
@@ -259,8 +254,7 @@ function Translate() {
                         }
 
                     </nav>
-                    
-                    {/*FEATURES-XXX As a user connected or not if my default language is the same that the language display page on this site remove this select box and dont' call the default route /list-language to improve performance and user experience */}
+
                     <Select
                         options={languages}
                         onChange={changeLanguage}
@@ -272,10 +266,9 @@ function Translate() {
                         style={{ float: 'right', width: '80px' }}
                     />
                 </div>
-            )}
+            
         </>
     );
-
 }
 
 export default Translate;

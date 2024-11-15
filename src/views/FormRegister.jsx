@@ -6,7 +6,8 @@ import { TextField, Button, Typography, Box } from '@mui/material';
 import Toast from './Toast.jsx';
 import { motion } from 'framer-motion';
 import { ElectricBikeSharp } from '@mui/icons-material';
-
+import '../css/style.css';
+import '../css/toast.css';
 
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -29,6 +30,9 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
 
     setSourceMapRange('LoginPage');
 
+    
+
+
     const isValidEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
@@ -46,7 +50,6 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-       
         {isSignup && (isConnexion=false)}
 
         if (!isValidPassword(true,password)) {
@@ -92,12 +95,18 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
             else
                 setToastMessage('Si votre code de service est valide, vous recevrez un mail de noreply@ pour valider votre inscirption. Vérifiez vos spams.');
 
+
+
+
+            setTimeout(() => {
+                
             // Déclencher l'animation de fondu avec flou
             setIsFirstLoad(false);
             setIsAnimating(true);
 
+                navigate('/logged');
 
-            setTimeout(() => navigate('/logged'), 2000); // Délai pour laisser l'animation du ToastMessage se dérouler
+            }, 2000); // Délai pour laisser l'animation du ToastMessage se dérouler
 
         } catch (error) {
            
@@ -254,6 +263,7 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
                         variant="contained"
                         color="primary"
                         fullWidth
+                       
                         sx={{ mt: 2 }}>
                     Se connecter
                     </Button>
@@ -265,6 +275,7 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
                         variant="contained"
                         color="primary"
                         fullWidth
+                       
                         sx={{ mt: 2 }} > 
                     S'inscire
                     </Button>
