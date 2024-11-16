@@ -1,0 +1,159 @@
+/* Styles pour la page d'erreur */
+
+body.no-background {
+    background-image: none !important;
+    background-color: #b6b1b1; 
+}
+
+.error-page {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Conteneur d'erreur avec animation glitch */
+.error-container {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 30px;
+}
+
+.error-container h1 {
+    font-size: 8rem;
+    position: relative;
+    color: #ff4d4d;
+    animation: neon-glow 1.5s ease-in-out infinite alternate;
+}
+
+.error-container p {
+    font-size: 1.5rem;
+    margin: 20px 0;
+}
+
+.home-button {
+    background-color: #00e5ff;
+    color: #000;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.home-button:hover {
+    background-color: #00b8d4;
+    transform: translateY(-5px);
+}
+
+/* Animation glitch */
+.glitch {
+    position: relative;
+    display: inline-block;
+    font-size: 3rem;
+    color: #ff4d4d;
+    animation: glitch 1s infinite;
+}
+
+.glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    overflow: hidden;
+}
+
+.glitch::before {
+    left: -2px;
+    text-shadow: -2px 0 #00ffea;
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch 2s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+    left: 2px;
+    text-shadow: -2px 0 #ff4d4d;
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch 2s infinite linear alternate;
+}
+
+@keyframes glitch {
+    0% {
+        clip: rect(44px, 450px, 56px, 0);
+    }
+    20% {
+        clip: rect(12px, 550px, 66px, 0);
+    }
+    40% {
+        clip: rect(44px, 450px, 56px, 0);
+    }
+    60% {
+        clip: rect(85px, 550px, 140px, 0);
+    }
+    80% {
+        clip: rect(44px, 550px, 56px, 0);
+    }
+    100% {
+        clip: rect(12px, 550px, 90px, 0);
+    }
+}
+
+/* Animation pour le texte lumineux */
+.glow-container {
+    text-align: center;
+}
+
+.glow-text {
+    font-size: 1.5rem;
+    color: #00e5ff;
+    text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff, 0 0 30px #00e5ff;
+    animation: glow-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+    0%, 100% {
+        text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff, 0 0 30px #00e5ff;
+    }
+    50% {
+        text-shadow: 0 0 15px #00b8d4, 0 0 25px #00b8d4, 0 0 35px #00b8d4;
+    }
+}
+
+/* Animation pour le GIF */
+.gif-container {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    margin-top: 40px;
+}
+
+#moving-gif {
+    position: absolute;
+    height: 100px;
+    animation: move-left-to-right 5s linear infinite;
+}
+
+@keyframes move-left-to-right {
+    from {
+        left: -150px;
+    }
+    to {
+        left: 100%;
+    }
+}

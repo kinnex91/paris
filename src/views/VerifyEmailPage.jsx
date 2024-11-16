@@ -29,7 +29,7 @@ function VerifyEmailPage() {
         try {
             // Faire l'appel API pour vérifier l'email
             console.log(`${API_BASE_URL}/auth/verify-email?token=${token}`)
-            const response = await axios.get(`${apiHost}/auth/verify-email?token=${token}`);
+            const response = await axios.get(`${API_BASE_URL}/auth/verify-email?token=${token}`);
 
             if (response.data.message === 'Email successfully verified') {
                 console.log('ok');

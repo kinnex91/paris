@@ -9,58 +9,33 @@ import axios from 'axios';
 //THIS MENU IS DEPRECATED WE USE T
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
-function Logout(){
+function Logout() {
 
     const navigate = useNavigate();
 
     useEffect(() => {
-
         const doLogOut = async () => {
-
-
-        try {
-            var rest = null;
-            const token = localStorage.getItem('token');
-
-            const res = await axios.get(
-                `${API_BASE_URL}/auth/logout`,
-
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                      },
+            try {
+                var rest = null;
+                const token = localStorage.getItem('token');
+                const res = await axios.get(
+                    `${API_BASE_URL}/auth/logout`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
                     });
-        
-        
-            
-            
-
-    
-
-            // déconnecter
-            localStorage.setItem('jwt', null);
-
-            setTimeout(() => {
-                navigate('/');
-              }, 1000);
-              
-
-
-        } catch (error) {
-           
-            
-
+                // déconnecter
+                localStorage.setItem('jwt', null);
+                setTimeout(() => {
+                    navigate('/');
+                }, 1000);
+            } catch (error) {
                 console.error('Erreur de déconnexion:', error);
-                
-                
+            }
         }
-       
-    }
-
-    doLogOut();
-})
-
-
+        doLogOut();
+    });
 }
 
 export default Logout;

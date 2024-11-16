@@ -1,0 +1,116 @@
+
+body.no-background {
+    background-image: none 
+
+    
+}
+
+body.background-pirate {
+    background-image: url('../images/pirate.png') !important;;
+
+    
+}
+
+
+.admin-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+    margin: auto;
+}
+
+.admin-panel, .user-panel {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.admin-panel h2, .user-panel h2 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #ffeb3b;
+}
+
+.admin-panel ul {
+    list-style: none;
+    padding: 0;
+}
+
+.admin-panel ul li {
+    margin-bottom: 10px;
+}
+
+.admin-panel ul li a {
+    text-decoration: none;
+    color: #ffeb3b;
+    font-weight: bold;
+}
+
+.admin-panel ul li a:hover {
+    text-decoration: underline;
+}
+
+.user-panel button {
+    background-color: #ffeb3b;
+    color: #3f51b5;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.user-panel button:hover {
+    background-color: #fff176;
+}
+
+.icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.loading-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.spinner {
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid #ffeb3b;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.white-text-div {
+    color: white; /* Texte en blanc */
+    background-color: rgba(0, 0, 0, 0.6); /* Fond noir semi-transparent pour le contraste */
+    padding: 20px; /* Espace intérieur pour aérer */
+    border-radius: 8px; /* Coins arrondis */
+    text-align: center; /* Centrer le texte */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre pour mieux se détacher */
+    font-weight: bold; /* Mettre le texte en gras */
+    font-size: 1.2em; /* Agrandir un peu la taille du texte */
+}
+
+
+
+.white-text-div-simple {
+    color: white; /* Texte en blanc */
+    
+    font-size: 1.2em; /* Agrandir un peu la taille du texte */
+}

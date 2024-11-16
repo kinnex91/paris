@@ -18,7 +18,7 @@ function Translate() {
     const [languages, setLanguages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('loggedIn') || false);
+    const [isLoggedIn, setIsLoggedIn] = useState(() => JSON.parse(localStorage.getItem('loggedIn')) || false);
 
     const location = useLocation();
 
@@ -39,11 +39,12 @@ function Translate() {
                 headers: { Authorization: `Bearer ${jwt}` }
             });
             setIsLoggedIn(response.data.isLoggedIn);
-            localStorage.setItem('loggedIn', response.data.isLoggedIn);
+            localStorage.setItem('loggedIn', JSON.stringify(response.data.isLoggedIn));
+
         } catch (error) {
             console.error('Erreur lors de la vérification de la connexion', error);
             setIsLoggedIn(false);
-            localStorage.setItem('loggedIn', false);
+            localStorage.setItem('loggedIn', JSON.stringify(false));
         }
     };
 
@@ -153,12 +154,22 @@ function Translate() {
 
     const handleLogout = async () => {
         const token = localStorage.getItem('jwt');
+
         try {
+            
+            setIsLoggedIn(false);
+            localStorage.setItem('loggedIn', JSON.stringify(false));
+            localStorage.removeItem('jwt');
+
             await axios.get(`${BACKEND_URL}/auth/logout`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            localStorage.removeItem('jwt');
-            nabigate("/login");
+            
+            checkIfLoggedIn();
+
+
+
+            navigate("/login");
             window.location.reload();
         } catch (error) {
             console.error('Erreur lors de la déconnexion', error);
@@ -191,8 +202,9 @@ function Translate() {
 
                         {/*Ci-dessous nous sommes est connecté */}
                         {isLoggedIn && (
-
+                           
                             <>
+
                                 {/*Ci-dessous nous sommes connecté et ADMIN */}
                                 {isAdmin && (
                                     <>
