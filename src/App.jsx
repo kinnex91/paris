@@ -6,8 +6,6 @@ import AdminRoute from './views/components/AdminRoute.jsx';
 import RequestAdminAndNotAdmin from './views/requestAdminAndNotAdmin.jsx'
 import RequestLoggedInAndNotLoggedIn from './views/RequestLoggedInAndNotLoggedIn.jsx'
 
-
-
 //--> on mettra dans chaque page le css, ici au pire juste le minimul legal le body class --> 
 import './css/style.css';
 
@@ -24,6 +22,9 @@ import Logout from './views/Logout.jsx';
 import Logged from './views/Logged.jsx';
 import NotFound from './views/NotFound.jsx';
 import { toast, ToastContainer } from 'react-toastify';
+
+
+import TournamentDataGrid from './views/admin/grid/TournamentDataGrid.jsx';
 
 // justify-content: center;
 function App() {
@@ -78,6 +79,9 @@ function App() {
 
                 {/* Routes inconnues */}
                 <Route path="*" element={<NotFound />} />
+
+                  {/* Routes CRUD ADMIIN */}
+                  <Route path="/admin/tournament" element={<TournamentDataGrid />} />
             </Routes>
 
         </>
