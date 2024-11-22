@@ -156,7 +156,7 @@ function Translate() {
         const token = localStorage.getItem('jwt');
 
         try {
-            
+
             setIsLoggedIn(false);
             localStorage.setItem('loggedIn', JSON.stringify(false));
             localStorage.removeItem('jwt');
@@ -164,7 +164,7 @@ function Translate() {
             await axios.get(`${BACKEND_URL}/auth/logout`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            
+
             checkIfLoggedIn();
 
 
@@ -196,89 +196,88 @@ function Translate() {
                 </div>
             )}
 
-            
-                <div>
-                    <nav className="navbar centerAPPBodyPanel">
 
-                        {/*Ci-dessous nous sommes est connecté */}
-                        {isLoggedIn && (
-                           
-                            <>
+            <div>
+                <nav className="navbar centerAPPBodyPanel">
 
-                                {/*Ci-dessous nous sommes connecté et ADMIN */}
-                                {isAdmin && (
-                                    <>
-                                        <ul className="menu">
-                                            <li>
-                                                <a href="#">Admin Dashboard</a>
-                                                <ul className="submenu">
-                                                    <li><a href="/admin/manage-users">Manage Users</a></li>
-                                                    <li><a href="/admin/manage-ligue">Manage Ligue</a></li>
-                                                    <li><a href="/admin/manage-team">Manage Team</a></li>
-                                                    <li><a href="/admin/manage-tournament">Manage Tournament</a></li>
-                                                    <li><a href="/admin/manage-results">Manage Results</a></li>
-                                                </ul>
-                                            </li>
+                    {/*Ci-dessous nous sommes est connecté */}
+                    {isLoggedIn && (
 
-                                            <li>
-                                                <ul className="menu">
-                                                    <li><a href="/logout" onClick={handleLogout}>Déconnexion</a></li>
-                                                    <li><a href="/about">À propos</a></li>
-                                                    <li><a href="/metrics">Metriques Web</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
+                        <>
 
-
-                                    </>
-                                )}
-
-                                {/*Ci-dessous nous sommes connecté mais PAS ADMIN */}
-                                {!isAdmin && (
+                            {/*Ci-dessous nous sommes connecté et ADMIN */}
+                            {isAdmin && (
+                                <>
                                     <ul className="menu">
+                                        <li>
+                                            <a href="#">Admin Dashboard</a>
+                                            <ul className="submenu">
+                                                <li><a href="/admin/manage-users">Manage Users</a></li>
+                                                <li><a href="/admin/manage-ligue">Manage Ligue</a></li>
+                                                <li><a href="/admin/manage-team">Manage Team</a></li>
+                                                <li><a href="/admin/manage-tournament">Manage Tournament</a></li>
+                                                <li><a href="/admin/manage-results">Manage Results</a></li>
+                                            </ul>
+                                        </li>
 
-                                        {isLoggedIn && (
-                                            <li><a href="/logout" onClick={handleLogout}>Déconnexion</a></li>
-                                        )}
-
-
-                                        <li><a href="/about">À propos</a></li>
-                                        <li><a href="/metrics">Metriques Web</a></li>
+                                        <li>
+                                            <ul className="menu">
+                                                <li><a href="/logout" onClick={handleLogout}>Déconnexion</a></li>
+                                                <li><a href="/about">À propos</a></li>
+                                                <li><a href="/metrics">Metriques Web</a></li>
+                                            </ul>
+                                        </li>
                                     </ul>
-                                )}
-                            </>
-
-                        )
-                        }
-
-                        {/*Ci-dessous nous sommes PAS connecté */}
-                        {!isLoggedIn && (
-                            <ul className="menu">
-
-                                <li><a href="/login" onClick={handleLogin}>Connexion</a></li>
-                                <li><a href="/signup" onClick={handleLogin}>Inscription</a></li>
-                                <li><a href="/about">À propos</a></li>
 
 
-                            </ul>
-                        )
+                                </>
+                            )}
 
-                        }
+                            {/*Ci-dessous nous sommes connecté mais PAS ADMIN */}
+                            {!isAdmin && (
+                                <ul className="menu">
 
-                    </nav>
+                                    <li><a href="/admin/tournament">Démo Gérer Tournois</a></li>
+                                    <li><a href="/about">À propos</a></li>
+                                    <li><a href="/metrics">Metriques Web</a></li>
+                                    {isLoggedIn && (
+                                        <li><a href="/logout" onClick={handleLogout}>Déconnexion</a></li>
+                                    )}
+                                </ul>
+                            )}
+                        </>
 
-                    <Select
-                        options={languages}
-                        onChange={changeLanguage}
-                        defaultValue={{ value: 'fr', label: 'Français (FR)' }}
-                        value={languages.find(option => option.value === actualLang)}
-                        isSearchable
-                        className="doNotTraduct"
-                        placeholder="Choisissez une langue"
-                        style={{ float: 'right', width: '80px' }}
-                    />
-                </div>
-            
+                    )
+                    }
+
+                    {/*Ci-dessous nous sommes PAS connecté */}
+                    {!isLoggedIn && (
+                        <ul className="menu">
+
+                            <li><a href="/login" onClick={handleLogin}>Connexion</a></li>
+                            <li><a href="/signup" onClick={handleLogin}>Inscription</a></li>
+                            <li><a href="/about">À propos</a></li>
+
+
+                        </ul>
+                    )
+
+                    }
+
+                </nav>
+
+                <Select
+                    options={languages}
+                    onChange={changeLanguage}
+                    defaultValue={{ value: 'fr', label: 'Français (FR)' }}
+                    value={languages.find(option => option.value === actualLang)}
+                    isSearchable
+                    className="doNotTraduct"
+                    placeholder="Choisissez une langue"
+                    style={{ float: 'right', width: '80px' }}
+                />
+            </div>
+
         </>
     );
 }

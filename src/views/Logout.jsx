@@ -23,6 +23,7 @@ function Logout() {
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
+                            
                         },
                     });
                 // déconnecter

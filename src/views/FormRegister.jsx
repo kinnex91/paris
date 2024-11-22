@@ -73,10 +73,10 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
                 { email, password },
                 {
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*'
-                    },
-                    withCredentials: false,
+                            'Content-Type': 'application/json',
+                              
+         },
+                        
                 }
             );
         
@@ -88,7 +88,7 @@ function FormRegister({ isSignup = false,urlPost = '', onSubmit }) {
             // Stocker le token JWT dans le localStorage
             localStorage.setItem('jwt', jwt);
 
-            setToastType('success');
+            setToastType('Connection succeded');
 
             if(isConnexion)
                 setToastMessage('Connexion réussie');

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, IconButton, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Add, Edit, Delete, Visibility } from '@mui/icons-material';
-import { getTournaments, createTournament, updateTournament, deleteTournament } from '../../services/TournamentService';
+import { getTournaments, createTournament, updateTournament, deleteTournament } from '../../services/TournamentService.js';
 
 const TournamentDataGrid = () => {
   const [tournaments, setTournaments] = useState([]);

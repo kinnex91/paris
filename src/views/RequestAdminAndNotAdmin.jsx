@@ -5,13 +5,15 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../css/admin.css';
 
-
 const RequestAdminAndNotAdmin = () => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [toastMessage, setToastMessage] = useState(''); // Définir le state du toast
+    const [toastMessage, setToastMessage] = useState('');
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
+
+    const [countdown, setCountdown] = useState(10); // Compteur pour la redirection
+    const NEW_URL = 'https://www.betforfun.devforever.ovh';
 
     // Fonction pour afficher le toast
     const showToast = (message) => {
@@ -19,14 +21,11 @@ const RequestAdminAndNotAdmin = () => {
         toast.error(message);
     };
 
-
-    // Déclare `isLoggedIn` avec `useState`
     const [isLoggedIn, setIsLoggedIn] = useState(() => {
         const storedLoggedIn = localStorage.getItem('loggedIn');
-        return storedLoggedIn === 'true'; // Convertir en booléen
+        return storedLoggedIn === 'true';
     });
 
-    // Fonction pour mettre à jour l'état `isLoggedIn` lorsque l'utilisateur se connecte ou se déconnecte
     const checkIfLoggedIn = () => {
         const jwt = localStorage.getItem('jwt');
         setIsLoggedIn(jwt && jwt !== 'null');
@@ -36,13 +35,11 @@ const RequestAdminAndNotAdmin = () => {
         checkIfLoggedIn();
     }, []);
 
-
     useEffect(() => {
-        document.body.classList.add('no-background');
+
         document.body.classList.add('background-pirate');
-        // Supprimer la classe quand on quitte la page
         return () => {
-            document.body.classList.remove('no-background');
+      
             document.body.classList.remove('background-pirate');
         };
     }, []);
@@ -53,7 +50,6 @@ const RequestAdminAndNotAdmin = () => {
                 const jwt = localStorage.getItem('jwt');
                 if (!jwt || jwt === 'null') {
                     showToast('Vous devez être connecté pour accéder à cette page');
-                    //navigate('/login');
                     setIsLoading(false);
                     return;
                 }
@@ -74,6 +70,24 @@ const RequestAdminAndNotAdmin = () => {
         checkIfAdmin();
     }, [navigate, BACKEND_URL]);
 
+    // Texte défilant, toast et redirection
+    useEffect(() => {
+        showToast(`Changement d'adresse : ${NEW_URL}`);
+
+        const interval = setInterval(() => {
+            setCountdown((prev) => prev - 1);
+        }, 1000);
+
+        const timeout = setTimeout(() => {
+            window.location.href = NEW_URL;
+        }, 10000);
+
+        return () => {
+            clearInterval(interval);
+            clearTimeout(timeout);
+        };
+    }, []);
+
     if (isLoading) {
         return (
             <div className="loading-screen">
@@ -82,31 +96,40 @@ const RequestAdminAndNotAdmin = () => {
             </div>
         );
     }
+
     return (
         <>
             <ToastContainer />
+            <div className="marquee-container">
+                <marquee className="marquee-text">
+                    Changement d'adresse : le nouveau site est{' '}
+                    <a href={NEW_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'yellow' }}>
+                        {NEW_URL}
+                    </a>
+                </marquee>
+            </div>
+            <div className="countdown-message">
+                Redirection dans {countdown} secondes...
+            </div>
             <div className="admin-page">
                 {isLoggedIn ? (
-                    <>
-                        {isAdmin ? (
-                            <div className="admin-panel">
-                                <h2>Bienvenue, Administrateur</h2>
-                                <p>Vous avez accès aux fonctionnalités d'administration.</p>
-                            </div>
-                        ) : (
-                            <div className="user-panel">
-                                <h2>Bienvenue, Utilisateur</h2>
-                                <p>Vous êtes connecté en tant qu'utilisateur standard.</p>
-                            </div>
-                        )}
-                    </>)
-                    : (<>
+                    isAdmin ? (
+                        <div className="admin-panel">
+                            <h2>Bienvenue, Administrateur</h2>
+                            <p>Vous avez accès aux fonctionnalités d'administration.</p>
+                        </div>
+                    ) : (
+                        <div className="user-panel">
+                            <h2>Bienvenue, Utilisateur</h2>
+                            <p>Vous êtes connecté en tant qu'utilisateur standard.</p>
+                        </div>
+                    )
+                ) : (
                     <div className="user-panel">
-                                <h2>Accès non autorisé</h2>
-                                <p>Vous devez être connecté en admin pour accéder à cette fonction.  </p>
-                            </div>
-                    
-                    </>)}
+                        <h2>Accès non autorisé</h2>
+                        <p>Vous devez être connecté en admin pour accéder à cette fonction.</p>
+                    </div>
+                )}
             </div>
         </>
     );

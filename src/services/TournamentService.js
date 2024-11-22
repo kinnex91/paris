@@ -1,6 +1,5 @@
+const BASE_URL  =  import.meta.env.VITE_BACKEND_URL+"/tournaments";
 import axios from 'axios';
-
-const BASE_URL = 'http://localhost:15004/tournaments';
 
 export const getTournaments = async () => {
   const response = await axios.get(BASE_URL);

@@ -59,7 +59,7 @@ function App() {
 
             <Routes>
                 {/* Route publique */}
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<RequestAdminAndNotAdmin />} />
                 <Route path="/requestAdminAndNotAdmin" element={<RequestAdminAndNotAdmin />} />
                 <Route path="/requestLoggedInAndNotLoggedIn" element={<RequestLoggedInAndNotLoggedIn />} />
 
