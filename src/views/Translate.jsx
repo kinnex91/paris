@@ -25,63 +25,16 @@ function Translate() {
     const LIBRETRANSLATE_SERVER = import.meta.env.VITE_LIBRETRANSLATE_SERVER;
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-    // Vérifier si l'utilisateur est connecté
-    const checkIfLoggedIn = async () => {
-        const jwt = localStorage.getItem('jwt');
-        if (!jwt || jwt === 'null') {
-            setIsLoggedIn(false);
-            localStorage.setItem('loggedIn', false);
-            return;
-        }
-
-        try {
-            const response = await axios.get(`${BACKEND_URL}/auth/is-logged-in`, {
-                headers: { Authorization: `Bearer ${jwt}` }
-            });
-            setIsLoggedIn(response.data.isLoggedIn);
-            localStorage.setItem('loggedIn', JSON.stringify(response.data.isLoggedIn));
-
-        } catch (error) {
-            console.error('Erreur lors de la vérification de la connexion', error);
-            setIsLoggedIn(false);
-            localStorage.setItem('loggedIn', JSON.stringify(false));
-        }
-    };
-
-    // Vérifier si l'utilisateur est un admin
-    const checkIfAdmin = async () => {
-        const jwt = localStorage.getItem('jwt');
-        if (!jwt || jwt === 'null') {
-            setIsAdmin(false);
-            return;
-        }
-
-        try {
-            const response = await axios.get(`${BACKEND_URL}/auth/is-admin`, {
-                headers: { Authorization: `Bearer ${jwt}` }
-            });
-            setIsAdmin(response.data.isAdmin);
-        } catch (error) {
-            console.error('Erreur lors de la vérification de l\'administrateur', error);
-            setIsAdmin(false);
-        }
-    };
-
+  
     useEffect(() => {
-        const path = location.pathname;
-        if (path === '/logged' || path === '/logout') {
-
-            checkIfLoggedIn();
-            checkIfAdmin();
-
-        }
+   
 
         fetchLanguages();
 
-        if (actualLang != 'fr')
+        if (actualLang != 'en')
             translatePage(actualLang);
 
-    }, [location]); // Rafraîchir chaque fois que la route change
+    }, [location]); // Refresh chaque fois que la route change
 
     // Récupérer la liste des langues depuis l'API
     const fetchLanguages = async () => {
@@ -152,41 +105,6 @@ function Translate() {
         }
     };
 
-    const handleLogout = async () => {
-        const token = localStorage.getItem('jwt');
-
-        try {
-
-            setIsLoggedIn(false);
-            localStorage.setItem('loggedIn', JSON.stringify(false));
-            localStorage.removeItem('jwt');
-
-            await axios.get(`${BACKEND_URL}/auth/logout`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            checkIfLoggedIn();
-
-
-
-            navigate("/login");
-            window.location.reload();
-        } catch (error) {
-            console.error('Erreur lors de la déconnexion', error);
-        }
-    };
-
-    const handleLogin = async () => {
-
-        try {
-
-            navigate("/logged");
-            window.location.reload();
-        } catch (error) {
-            console.error('Erreur lors de la connexion ou l\'enregistrement', error);
-        }
-    };
-
     return (
         <>
             {loading && (
@@ -198,84 +116,17 @@ function Translate() {
 
 
             <div>
-                <nav className="navbar centerAPPBodyPanel">
-
-                    {/*Ci-dessous nous sommes est connecté */}
-                    {isLoggedIn && (
-
-                        <>
-
-                            {/*Ci-dessous nous sommes connecté et ADMIN */}
-                            {isAdmin && (
-                                <>
-                                    <ul className="menu">
-                                        <li>
-                                            <a href="#">Admin Dashboard</a>
-                                            <ul className="submenu">
-                                                <li><a href="/admin/manage-users">Manage Users</a></li>
-                                                <li><a href="/admin/manage-ligue">Manage Ligue</a></li>
-                                                <li><a href="/admin/manage-team">Manage Team</a></li>
-                                                <li><a href="/admin/manage-tournament">Manage Tournament</a></li>
-                                                <li><a href="/admin/manage-results">Manage Results</a></li>
-                                            </ul>
-                                        </li>
-
-                                        <li>
-                                            <ul className="menu">
-                                                <li><a href="/logout" onClick={handleLogout}>Déconnexion</a></li>
-                                                <li><a href="/about">À propos</a></li>
-                                                <li><a href="/metrics">Metriques Web</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-
-
-                                </>
-                            )}
-
-                            {/*Ci-dessous nous sommes connecté mais PAS ADMIN */}
-                            {!isAdmin && (
-                                <ul className="menu">
-
-                                    <li><a href="/admin/tournament">Démo Gérer Tournois</a></li>
-                                    <li><a href="/about">À propos</a></li>
-                                    <li><a href="/metrics">Metriques Web</a></li>
-                                    {isLoggedIn && (
-                                        <li><a href="/logout" onClick={handleLogout}>Déconnexion</a></li>
-                                    )}
-                                </ul>
-                            )}
-                        </>
-
-                    )
-                    }
-
-                    {/*Ci-dessous nous sommes PAS connecté */}
-                    {!isLoggedIn && (
-                        <ul className="menu">
-
-                            <li><a href="/login" onClick={handleLogin}>Connexion</a></li>
-                            <li><a href="/signup" onClick={handleLogin}>Inscription</a></li>
-                            <li><a href="/about">À propos</a></li>
-
-
-                        </ul>
-                    )
-
-                    }
-
-                </nav>
-
-                <Select
+            <Select
                     options={languages}
                     onChange={changeLanguage}
-                    defaultValue={{ value: 'fr', label: 'Français (FR)' }}
+                    defaultValue={{ value: 'en', label: 'English (EN)' }}
                     value={languages.find(option => option.value === actualLang)}
                     isSearchable
                     className="doNotTraduct"
-                    placeholder="Choisissez une langue"
+                    placeholder="Choose language"
                     style={{ float: 'right', width: '80px' }}
                 />
+               
             </div>
 
         </>

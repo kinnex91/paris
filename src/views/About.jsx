@@ -10,7 +10,7 @@ function AboutPage() {
     <div className="about-container">
         <h2>À propos de notre plateforme</h2>
         <p>
-            Bienvenue sur notre plateforme de paris sportifs. Nous proposons un espace pour les passionnés de sport qui souhaitent parier sur leurs équipes et événements sportifs préférés.
+            Bienvenue sur notre plateforme de paris sportifs. Nous proposons un espace pour les passionnés de sport qui souhaitent pronostiquer sur leurs équipes et événements sportifs préférés.
         </p>
         <h3>Disclaimer</h3>
         <p className="disclaimer">
